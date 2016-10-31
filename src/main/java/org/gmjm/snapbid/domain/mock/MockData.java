@@ -1,15 +1,20 @@
 package org.gmjm.snapbid.domain.mock;
 
+import java.math.BigInteger;
 import java.time.ZonedDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Random;
 
 import org.gmjm.snapbid.domain.model.Auction;
+import org.gmjm.snapbid.domain.model.AuctionWatch;
+import org.gmjm.snapbid.domain.model.Bid;
 import org.gmjm.snapbid.domain.model.Item;
+import org.gmjm.snapbid.domain.repository.AuctionWatchRepository;
+import org.gmjm.snapbid.domain.repository.BidRepository;
 import org.gmjm.snapbid.domain.repository.ItemRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
 
 import org.gmjm.snapbid.domain.repository.AuctionRepository;
 import org.springframework.stereotype.Controller;
@@ -28,7 +33,15 @@ public class MockData implements InitializingBean
 	@Autowired
 	private ItemRepository itemRepository;
 
+	@Autowired
+	private BidRepository bidRepository;
+
+	@Autowired
+	private AuctionWatchRepository auctionWatchRepository;
+
 	private Random r = new Random();
+
+	Lorem lorem = LoremIpsum.getInstance();
 
 	@Override
 	public void afterPropertiesSet() throws Exception
@@ -36,7 +49,6 @@ public class MockData implements InitializingBean
 
 
 
-		Lorem lorem = LoremIpsum.getInstance();
 
 		for(int i = 0; i < 20; i++){
 			Auction a = new Auction();
@@ -53,6 +65,27 @@ public class MockData implements InitializingBean
 			createItems(fname,a);
 		}
 
+		{
+			AuctionWatch auctionWatch = new AuctionWatch();
+
+			Auction toWatch = new Auction();
+			toWatch.setId(1l);
+
+			auctionWatch.setAuction(toWatch);
+			auctionWatch.setUserId("aglassman");
+			auctionWatchRepository.save(auctionWatch);
+		}
+
+		{
+			AuctionWatch auctionWatch = new AuctionWatch();
+
+			Auction toWatch = new Auction();
+			toWatch.setId(2l);
+
+			auctionWatch.setAuction(toWatch);
+			auctionWatch.setUserId("steve");
+			auctionWatchRepository.save(auctionWatch);
+		}
 
 	}
 
@@ -64,11 +97,35 @@ public class MockData implements InitializingBean
 			item.setAuction(a);
 			item.setName(fname + "'s really cool thing #" + i);
 			item.setDescription("It's cool I swear.");
-			int dollars = (int)Math.floor(r.nextDouble() * 1000);
-			int cents = (int)Math.floor(r.nextDouble() * 100);
-			item.setStartingPrice(String.format("%s.%s",dollars,cents));
+			item.setStartingPriceUnits(new BigInteger(8,r));
+			item.setMinimumBidIncrease(BigInteger.TEN);
 			itemRepository.save(item);
+			createBids(item);
 
+		}
+	}
+
+	private void createBids(Item item) {
+
+		ZonedDateTime bidTime = item.getAuction().getStartDateTime();
+
+		int bids = (int)Math.floor(r.nextDouble() * 20);
+
+		for(int i = 0; i < bids; i++) {
+			Bid bid = new Bid();
+			bid.setItem(item);
+
+			bidTime = bidTime.plusMinutes((int)Math.floor(r.nextDouble() * 20));
+			bid.setBidtime(bidTime);
+
+			while(bid.getBidUnits().compareTo(item.getMinimumBidIncrease()) <= 0)
+			{
+				bid.setBidUnits(item.getCurrentPrice().add(new BigInteger(8,r)));
+			}
+
+			bid.setUser(lorem.getEmail());
+			bidRepository.save(bid);
+			item.getBids().add(bid);
 		}
 	}
 }

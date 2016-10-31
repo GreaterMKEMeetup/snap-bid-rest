@@ -1,6 +1,7 @@
 package org.gmjm.snapbid.domain.model;
 
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -85,7 +86,7 @@ public class Auction
 
 
 	public String getAuctionStart() {
-		return startDateTime != null ? startDateTime.toString() : null;
+		return startDateTime != null ? startDateTime.format(DateTimeFormatter.ISO_DATE_TIME) : null;
 	}
 
 	public void setStartDateTime(ZonedDateTime startDateTime)
@@ -100,7 +101,7 @@ public class Auction
 	}
 
 	public String getAuctionEnd() {
-		return endDateTime != null ? endDateTime.toString() : null;
+		return endDateTime != null ? endDateTime.format(DateTimeFormatter.ISO_DATE_TIME) : null;
 	}
 
 
