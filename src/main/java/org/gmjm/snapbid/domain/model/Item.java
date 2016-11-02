@@ -18,7 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name="Item")
@@ -43,6 +45,7 @@ public class Item
 	private Auction auction;
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
+	@JsonManagedReference
 	private List<Bid> bids = new ArrayList<>();
 
 

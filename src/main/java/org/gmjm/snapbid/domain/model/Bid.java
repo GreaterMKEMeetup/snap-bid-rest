@@ -13,11 +13,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.hateoas.ResourceSupport;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="Bid")
-public class Bid
+public class Bid extends ResourceSupport
 {
 
 
@@ -34,10 +39,12 @@ public class Bid
 
 	@ManyToOne
 	@JoinColumn(name="item_id")
+	@JsonBackReference
 	private Item item;
 
 
-	public Long getId()
+	@JsonProperty("id")
+	public Long getBidId()
 	{
 		return id;
 	}

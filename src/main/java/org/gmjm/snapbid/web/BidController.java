@@ -3,11 +3,21 @@ package org.gmjm.snapbid.web;
 import java.math.BigInteger;
 import java.time.ZonedDateTime;
 
+import org.gmjm.snapbid.domain.listeners.BidListener;
 import org.gmjm.snapbid.domain.model.Bid;
 import org.gmjm.snapbid.domain.model.Item;
+import org.gmjm.snapbid.domain.repository.AuctionRepository;
 import org.gmjm.snapbid.domain.repository.BidRepository;
 import org.gmjm.snapbid.domain.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkBuilder;
+import org.springframework.hateoas.ResourceAssembler;
+import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.hateoas.mvc.ControllerLinkBuilderFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,10 +34,13 @@ public class BidController
 	private BidRepository bidRepository;
 
 	@Autowired
-	private SimpMessagingTemplate simpMessagingTemplate;
+	BidListener bidListener;
+
+	@Autowired
+	RepositoryEntityLinks entityLinks;
 
 	@RequestMapping("/increaseBid{& itemId}")
-	public String increaseBid(Long itemId) {
+	public Bid increaseBid(Long itemId) {
 		Item item = itemRepository.getOne(itemId);
 
 
@@ -39,9 +52,13 @@ public class BidController
 
 		bidRepository.save(newBid);
 
-		simpMessagingTemplate.convertAndSend("/topic/bids",String.format("%s : %s",item.getName(), newBid.getBidUnits()));
+		newBid.add(entityLinks.linkToSingleResource(BidRepository.class, newBid.getBidId()));
+		newBid.add(entityLinks.linkToSingleResource(ItemRepository.class, newBid.getItem().getId()));
+		newBid.add(entityLinks.linkToSingleResource(AuctionRepository.class, newBid.getItem().getAuction().getId()));
 
-		return "success";
+		bidListener.handleBidSave(newBid);
+
+		return newBid;
 	}
 
 }
