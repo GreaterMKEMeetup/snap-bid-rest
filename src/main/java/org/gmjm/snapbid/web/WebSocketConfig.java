@@ -14,7 +14,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/portfolio")
-			.setAllowedOrigins("http://localhost:8081")
+			.setAllowedOrigins("http://localhost:8081","https://snap-bid-rest.cfapps.io")
 			.withSockJS()
 			.setClientLibraryUrl("//cdn.jsdelivr.net/sockjs/1/sockjs.min.js");
 	}

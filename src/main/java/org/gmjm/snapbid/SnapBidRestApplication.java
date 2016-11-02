@@ -40,9 +40,9 @@ public class SnapBidRestApplication extends WebSecurityConfigurerAdapter{
 				.logout()
 				.logoutSuccessUrl("/")
 				.permitAll();
-			//.and()
-			//	.csrf()
-			//	.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+
+		http.csrf().disable();
+
 	}
 
 }
