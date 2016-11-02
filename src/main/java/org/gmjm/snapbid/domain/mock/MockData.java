@@ -1,30 +1,27 @@
 package org.gmjm.snapbid.domain.mock;
 
-import java.math.BigInteger;
-import java.time.ZonedDateTime;
-import java.time.temporal.TemporalUnit;
-import java.util.Random;
-
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
 import org.gmjm.snapbid.domain.model.Auction;
 import org.gmjm.snapbid.domain.model.AuctionWatch;
 import org.gmjm.snapbid.domain.model.Bid;
 import org.gmjm.snapbid.domain.model.Item;
+import org.gmjm.snapbid.domain.repository.AuctionRepository;
 import org.gmjm.snapbid.domain.repository.AuctionWatchRepository;
 import org.gmjm.snapbid.domain.repository.BidRepository;
 import org.gmjm.snapbid.domain.repository.ItemRepository;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 
-import org.gmjm.snapbid.domain.repository.AuctionRepository;
-import org.springframework.stereotype.Controller;
+import java.math.BigInteger;
+import java.time.ZonedDateTime;
+import java.util.Random;
 
-import com.thedeanda.lorem.Lorem;
-import com.thedeanda.lorem.LoremIpsum;
-
-@Controller
+@Component
 @Profile("mock")
-public class MockData implements InitializingBean
+public class MockData implements CommandLineRunner
 {
 
 	@Autowired
@@ -44,8 +41,7 @@ public class MockData implements InitializingBean
 	Lorem lorem = LoremIpsum.getInstance();
 
 	@Override
-	public void afterPropertiesSet() throws Exception
-	{
+	public void run(String... args) throws Exception {
 		for(int i = 0; i < 100; i++){
 			Auction a = new Auction();
 			String fname = lorem.getFirstName();
@@ -82,7 +78,6 @@ public class MockData implements InitializingBean
 			auctionWatch.setUserId("steve");
 			auctionWatchRepository.save(auctionWatch);
 		}
-
 	}
 
 
