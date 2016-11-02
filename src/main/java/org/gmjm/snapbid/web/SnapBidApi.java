@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class SnapBidApi
 {
 
-	@RequestMapping("/")
-	public String hello() {
-		return "Hello World";
-	}
+
 
 }

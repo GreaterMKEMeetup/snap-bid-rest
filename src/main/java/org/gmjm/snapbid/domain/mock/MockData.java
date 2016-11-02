@@ -46,11 +46,7 @@ public class MockData implements InitializingBean
 	@Override
 	public void afterPropertiesSet() throws Exception
 	{
-
-
-
-
-		for(int i = 0; i < 20; i++){
+		for(int i = 0; i < 100; i++){
 			Auction a = new Auction();
 			String fname = lorem.getFirstName();
 			a.setAuctionName(fname + "'s Auction");
