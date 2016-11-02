@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @SpringBootApplication
-//@EnableOAuth2Sso
+@EnableOAuth2Sso
 @RestController
 public class SnapBidRestApplication extends WebSecurityConfigurerAdapter{
 
@@ -30,16 +30,10 @@ public class SnapBidRestApplication extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.antMatcher("/**")
 			.authorizeRequests()
-				.antMatchers("/", "/**")
-				.permitAll()
-			.anyRequest()
-				.authenticated()
-			.and()
-				.logout()
-				.logoutSuccessUrl("/")
-				.permitAll();
+				.antMatchers("/**")
+				.authenticated();
+
 
 		http.csrf().disable();
 
