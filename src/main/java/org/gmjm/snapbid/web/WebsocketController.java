@@ -10,14 +10,11 @@ import org.springframework.stereotype.Controller;
 public class WebsocketController
 {
 
-	@Autowired
-	private SimpMessagingTemplate simpMessagingTemplate;
-
-	@MessageMapping("/chat")
-	@SendTo("/topic/chat")
+	@MessageMapping("/bids")
+	@SendTo("/topic/bids")
 	public String greeting(String message) throws Exception {
 
-		return message;
+		return "Chat: " + message;
 	}
 
 }

@@ -1,0 +1,9 @@
+---
+applications:
+- name: snap-bid-rest
+  buildpack: java_buildpack
+  path: build/libs/snap-bid-rest-0.0.1-SNAPSHOT.jar
+  env:
+    spring.profiles.active: mock
+  memory: 1024M
+  instances: 1

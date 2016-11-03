@@ -23,21 +23,26 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.thedeanda.lorem.Lorem;
+import com.thedeanda.lorem.LoremIpsum;
+
 @RestController
 public class BidController
 {
 
 	@Autowired
-	private ItemRepository itemRepository;
+	ItemRepository itemRepository;
 
 	@Autowired
-	private BidRepository bidRepository;
+	BidRepository bidRepository;
 
 	@Autowired
 	BidListener bidListener;
 
 	@Autowired
 	RepositoryEntityLinks entityLinks;
+
+	Lorem lorem = LoremIpsum.getInstance();
 
 	@RequestMapping("/increaseBid{& itemId}")
 	public Bid increaseBid(Long itemId) {
@@ -48,7 +53,7 @@ public class BidController
 		newBid.setItem(item);
 		newBid.setBidtime(ZonedDateTime.now());
 		newBid.setBidUnits(item.getCurrentPrice().add(BigInteger.valueOf(300l)));
-		newBid.setUser("Anon");
+		newBid.setUser(lorem.getName());
 
 		bidRepository.save(newBid);
 
