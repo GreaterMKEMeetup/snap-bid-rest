@@ -10,21 +10,8 @@ spring:
     show_sql: false
   profiles:
     active: mock
-  social:
-    auto-connection-views: false
-security:
-  oauth2:
-    client:
-      clientId: 360277484306918
-      clientSecret: 0a4a1a2dc6d061d2f710e85e48f3a2fd
-      accessTokenUri: https://graph.facebook.com/oauth/access_token
-      userAuthorizationUri: https://www.facebook.com/dialog/oauth
-      tokenName: oauth_token
-      authenticationScheme: query
-      clientAuthenticationScheme: form
-    resource:
-      userInfoUri: https://graph.facebook.com/me
 server:
   tomcat:
     remote_ip_header: x-forwarded-for
     protocol_header: x-forwarded-proto
+  context-path: /api
